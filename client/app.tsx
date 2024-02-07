@@ -4,7 +4,6 @@ import { AuthProvider } from './src/usersPage/authHandlers/authContext';
 import AuthContext from './src/usersPage/authHandlers/authContext'; 
 import LoginForm from './src/usersPage/loginUser/login';
 import RegisterForm from './src/usersPage/registerUser/register';
-import Dashboard from './src/usersPage/dashboard';
 import PrivateRoute from './src/usersPage/authHandlers/PrivateRoute';
 import UserProfile from './src/usersPage/logout';
 import SessionInitializer from './src/usersPage/authHandlers/SessionInitializer';
@@ -35,7 +34,6 @@ const App: React.FC = () => {
             <Route path="/dashboard" element={
               <PrivateRoute>
                 <UserProfile />
-                <Dashboard />
               </PrivateRoute>
             } />
             <Route path="/test" element={

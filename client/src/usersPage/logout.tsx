@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import axios from 'axios';
 import AuthContext from './authHandlers/authContext';
 import { useNavigate } from 'react-router-dom';
+import UserDataDisplay from './userPage/getUsersFolder';
 
 const UserProfile: React.FC = () => {
   const { user, logout, setUser } = useContext(AuthContext);
@@ -32,6 +33,8 @@ const UserProfile: React.FC = () => {
     <div>
       <h1>Welcome, {user.username}!</h1>
       <button onClick={handleLogout}>Logout</button>
+      <UserDataDisplay />
+
     </div>
   );
 };
