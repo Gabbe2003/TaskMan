@@ -27,7 +27,7 @@ const handleRefreshToken = async (req, res) => {
             const accessToken = jwt.sign(
                 { "UserInfo": { "username": decoded.username, "id": decoded.id } },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '1h' }
+                { expiresIn: '2h' }
             );
 
             console.log(`New access token generated for user: ${decoded.username}`);
@@ -47,7 +47,7 @@ const handleRefreshToken = async (req, res) => {
 
             console.log('User document updated with new refresh token.');
 
-            res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 60 * 60 * 1000 });
+            res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 2 * 60 * 60 * 1000 });
 
 
             res.cookie('refreshToken', newRefreshToken, {httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 7 * 24 * 60 * 60 * 1000});

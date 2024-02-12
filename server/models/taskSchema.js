@@ -24,12 +24,16 @@ const taskSchema = new Schema({
     dueDate: {
         type: Date,
     },
-  
+    createdTask: {
+        type: Date,
+        default: Date.now 
+    },
 });
 
 const folderSchema = new Schema({
     name: { type: String, required: true },
     favorite: { type: Boolean, default: false },
+    dueDate: { type: Date, default: Date.now},
     tasks: [taskSchema],
     owner: {
         type: String, 

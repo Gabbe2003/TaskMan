@@ -5,10 +5,11 @@ import AuthContext from './src/usersPage/authHandlers/authContext';
 import LoginForm from './src/usersPage/loginUser/login';
 import RegisterForm from './src/usersPage/registerUser/register';
 import PrivateRoute from './src/usersPage/authHandlers/PrivateRoute';
-import UserProfile from './src/usersPage/logout';
+import UserProfile from './src/usersPage/api/logout';
 import SessionInitializer from './src/usersPage/authHandlers/SessionInitializer';
 import Som from './som';
 import { setupInterceptors } from './src/usersPage/authHandlers/AxiosInterceptor';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App: React.FC = () => {
   const { user, setUser, verifySession } = useContext(AuthContext);

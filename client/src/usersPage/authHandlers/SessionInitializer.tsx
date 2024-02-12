@@ -1,23 +1,36 @@
-// SessionInitializer.tsx
 import { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from './authContext';
 
 const SessionInitializer = () => {
-  const { verifySession } = useContext(AuthContext);
+  const { user, verifySession } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       try {
-        verifySession();
+        const sessionIsValid = await verifySession();
+        if (sessionIsValid) {
+          // Redirect to the dashboard if the session verification is successful
+          navigate('/dashboard');
+        } else {
+          // Optionally, redirect to login if session is not valid
+          // navigate('/');
+        }
       } catch (error) {
         console.log('Session verification failed:', error);
+        // Handle failure, possibly redirecting to login page
+        // navigate('/');
       }
     };
 
-    initializeAuth();
-  }, [verifySession]);
+    // Run the session initializer only if the user state is not already set
+    if (!user) {
+      initializeAuth();
+    }
+  }, [user, verifySession, navigate]);
 
-  return null;
+  return null; // This component does not render anything
 };
 
 export default SessionInitializer;

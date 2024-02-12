@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import axios from 'axios';
-import AuthContext from './authHandlers/authContext';
+import AuthContext from '../authHandlers/authContext';
 import { useNavigate } from 'react-router-dom';
-import UserDataDisplay from './userPage/getUsersFolder';
+import UserDataDisplay from './getUsersFolder';
 
 const UserProfile: React.FC = () => {
   const { user, logout, setUser } = useContext(AuthContext);

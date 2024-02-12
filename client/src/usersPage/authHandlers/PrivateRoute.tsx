@@ -17,7 +17,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
     console.error('Access denied. User not authenticated.');
     return <Navigate to="/" />;
   }
-
   return children;
 };
 

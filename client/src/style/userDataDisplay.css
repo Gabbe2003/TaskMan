@@ -1,0 +1,19 @@
+.folder {
+    border: 2px solid #007bff;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .folder:hover {
+    transform: scale(1.05);
+  }
+  
+  .modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 0.25rem;
+  }

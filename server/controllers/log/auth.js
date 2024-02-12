@@ -42,7 +42,7 @@ const handleLogin = async (req, res) => {
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '15m' } 
+            { expiresIn: '30m' } 
         );
 
         const refreshToken = jwt.sign(
@@ -69,7 +69,7 @@ const handleLogin = async (req, res) => {
             res.clearCookie('accessToken', { httpOnly: true, sameSite: 'Lax', secure: false }); 
         }
         
-        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 15 * 60 * 1000 }); // 15 minutes
+        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 30 * 60 * 1000 }); // 15 minutes
 
         // Set the refresh token as a separate cookie
         res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7 days
