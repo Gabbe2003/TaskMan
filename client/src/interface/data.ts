@@ -5,16 +5,20 @@
   }
 
 
-  export type Action =
-  | { type: 'ADD_FOLDER'; payload: IFolder }
-  | { type: 'REMOVE_FOLDER'; payload: { id: string | number } }
-  | { type: 'TOGGLE_FAVORITE'; payload: { folderId: string } }
-  | { type: 'SET_FOLDERS'; payload: IFolder[] }
-  | { type: 'SET_SELECTED_FOLDER'; payload: IFolder | null }
-  | { type: 'SET_SEARCH'; payload: string };
+  export 
+  type Action =
+    | { type: 'ADD_FOLDER'; payload: IFolder }
+    | { type: 'REMOVE_FOLDER'; payload: { id: string | number } }
+    | { type: 'TOGGLE_FAVORITE'; payload: { folderId: string } }
+    | { type: 'SET_FOLDERS'; payload: IFolder[] }
+    | { type: 'SET_SELECTED_FOLDER'; payload: IFolder | null }
+    | { type: 'SET_SEARCH'; payload: string }
+    | { type: 'SHOW_CREATE_FOLDER_MODAL' }
+    | { type: 'HIDE_CREATE_FOLDER_MODAL' }
+    | { type: 'UPDATE_NEW_FOLDER_FORM'; payload: Partial<IFolderState['newFolderForm']> };
 
   export interface ITask  {
-    _id: string; 
+    id: string; 
     name: string;
     subTask: string;
     priority: 'low' | 'medium' | 'high';
@@ -24,7 +28,7 @@
   }
 
   export interface IFolder {
-    _id: string;
+    id: string;
     name: string;
     favorite?: boolean;
     tasks?: ITask[];
@@ -35,8 +39,13 @@
     folders: IFolder[];
     selectedFolder: IFolder | null;
     search: string;
+    showCreateFolderModal: boolean;
+    newFolderForm: {
+      name: string;
+      favorite: boolean;
+      dueDate: string;
+    };
   }
-  
   export interface IAlert {
     message: string;
     type: string;

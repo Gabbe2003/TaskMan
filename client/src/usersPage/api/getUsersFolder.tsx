@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useFolderUpdate } from '../utilities/folderUpdatecontext';
 // import { Star } from '@phosphor-icons/react';
 
 
@@ -28,6 +29,7 @@ const UserDataDisplay: React.FC = () => {
   const [selectedTasks, setSelectedTasks] = useState<Task[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { updateSignal } = useFolderUpdate(); 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -46,7 +48,7 @@ const UserDataDisplay: React.FC = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [updateSignal]);
 
   const openModal = (tasks: Task[]) => {
     setSelectedTasks(tasks);

@@ -7,9 +7,10 @@ import RegisterForm from './src/usersPage/registerUser/register';
 import PrivateRoute from './src/usersPage/authHandlers/PrivateRoute';
 import UserProfile from './src/usersPage/api/logout';
 import SessionInitializer from './src/usersPage/authHandlers/SessionInitializer';
-import Som from './som';
 import { setupInterceptors } from './src/usersPage/authHandlers/AxiosInterceptor';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FolderProvider } from './src/folderReducer';
+import { FolderUpdateProvider } from './src/usersPage/utilities/folderUpdatecontext';
 
 const App: React.FC = () => {
   const { user, setUser, verifySession } = useContext(AuthContext);
@@ -34,12 +35,13 @@ const App: React.FC = () => {
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/dashboard" element={
               <PrivateRoute>
-                <UserProfile />
-              </PrivateRoute>
-            } />
-            <Route path="/test" element={
-              <PrivateRoute>
-                <Som />
+                  <FolderProvider>
+                    <FolderUpdateProvider>
+                      
+                    <UserProfile />
+
+                    </FolderUpdateProvider>
+                 </FolderProvider>
               </PrivateRoute>
             } />
           </Routes>
