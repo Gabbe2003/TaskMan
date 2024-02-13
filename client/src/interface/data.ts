@@ -4,9 +4,7 @@
     dismissAlert: () => void;
   }
 
-
-  export 
-  type Action =
+  export type Action =
     | { type: 'ADD_FOLDER'; payload: IFolder }
     | { type: 'REMOVE_FOLDER'; payload: { id: string | number } }
     | { type: 'TOGGLE_FAVORITE'; payload: { folderId: string } }

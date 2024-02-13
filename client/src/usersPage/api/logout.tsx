@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../authHandlers/authContext';
 import { useNavigate } from 'react-router-dom';
-import UserDataDisplay from './getUsersFolder';
-import HandleCreateFolder from './createFolder';
+import UserDataDisplay from './folderComponents/getUsersFolder';
+import HandleCreateFolder from './folderComponents/createFolder';
 
 const UserProfile: React.FC = () => {
   const { user, logout, setUser } = useContext(AuthContext);
@@ -33,7 +33,7 @@ const UserProfile: React.FC = () => {
   return (
     <div>
       <h1>Welcome, {user.username}!</h1>
-      <button onClick={handleLogout}>Logout</button>
+      <button className="d-flex justify-content-start align-items-center rounded " onClick={handleLogout}>Logout</button>
       <UserDataDisplay />
       <HandleCreateFolder />
 

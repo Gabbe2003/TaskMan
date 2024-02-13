@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import axios from 'axios';
-import { FolderContext } from '../../folderReducer';
-import { showCreateFolderModal, hideCreateFolderModal, updateNewFolderForm, addFolder, setSelectedFolder } from '../utilities/folderActions';
-import { useFolderUpdate } from '../utilities/folderUpdatecontext';
-import { IFolderState } from '../../interface/data';
+import { FolderContext } from '../../../folderReducer';
+import { showCreateFolderModal, hideCreateFolderModal, updateNewFolderForm, addFolder, setSelectedFolder } from '../../utilities/folderActions';
+import { useFolderUpdate } from '../../utilities/folderUpdatecontext';
+import { IFolderState } from '../../../interface/data';
 
 const HandleCreateFolder = () => {
     const { state, dispatch } = useContext(FolderContext)!;
     const { triggerUpdate  } = useFolderUpdate();
     const [validationError, setValidationError] = React.useState('');
+
 
     const validateForm = () => {
       if (!state.newFolderForm.name.trim()) {
@@ -40,7 +41,7 @@ const HandleCreateFolder = () => {
         dispatch(addFolder(response.data));
         dispatch(setSelectedFolder(response.data));
         dispatch(hideCreateFolderModal());
-        triggerUpdate (); // Make sure this is correctly defined and accessible
+        triggerUpdate (); 
       } catch (error) {
         console.error('Failed to create folder:', error);
       }
