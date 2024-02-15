@@ -1,8 +1,8 @@
 import React, { ReactNode, createContext, useReducer } from 'react';
-import { Action ,IFolderState } from './interface/data';
+import { IAction ,IFolderState } from '../../../interface/data';
 
 // Reducer
-const reducer = (state: IFolderState, action: Action): IFolderState => {
+const reducer = (state: IFolderState, action: IAction): IFolderState => {
     switch (action.type) {
       case 'ADD_FOLDER':
         return { ...state, folders: [...state.folders, action.payload] };
@@ -39,7 +39,7 @@ const reducer = (state: IFolderState, action: Action): IFolderState => {
     selectedFolder: null,
     search: '',
     showCreateFolderModal: false,
-    newFolderForm: { name: '', favorite: false, dueDate: '' },
+    newFolderForm: { name: '', favorite: false, dueDate: '', tasks:[] }
   };
 
 interface FolderProviderProps {
@@ -47,7 +47,7 @@ interface FolderProviderProps {
   }
 
 // Context
-const FolderContext = createContext<{ state: IFolderState; dispatch: React.Dispatch<Action> } | undefined>(undefined);
+const FolderContext = createContext<{ state: IFolderState; dispatch: React.Dispatch<IAction> } | undefined>(undefined);
 
 // Provider
  const FolderProvider: React.FC<FolderProviderProps> = ({ children }) => {

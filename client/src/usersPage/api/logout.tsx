@@ -34,8 +34,8 @@ const UserProfile: React.FC = () => {
     <div>
       <h1>Welcome, {user.username}!</h1>
       <button className="d-flex justify-content-start align-items-center rounded " onClick={handleLogout}>Logout</button>
-      <UserDataDisplay />
       <HandleCreateFolder />
+      <UserDataDisplay />
 
     </div>
   );

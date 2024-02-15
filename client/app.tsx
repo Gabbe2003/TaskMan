@@ -11,8 +11,10 @@ import PrivateRoute from './src/usersPage/authHandlers/PrivateRoute';
 import UserProfile from './src/usersPage/api/logout';
 import SessionInitializer from './src/usersPage/authHandlers/SessionInitializer';
 import { setupInterceptors } from './src/usersPage/authHandlers/AxiosInterceptor';
-import { FolderProvider } from './src/folderReducer';
-import { FolderUpdateProvider } from './src/usersPage/utilities/folderUpdatecontext';
+import { FolderProvider } from './src/usersPage/utilities/folder/folderReducer';
+import { FolderUpdateProvider } from './src/usersPage/utilities/folder/folderUpdatecontext';
+import { TaskProvider } from './src/usersPage/utilities/tasks/taskReducer';
+
 
 const App: React.FC = () => {
   const { user, setUser, verifySession } = useContext(AuthContext);
@@ -39,9 +41,9 @@ const App: React.FC = () => {
               <PrivateRoute>
                   <FolderProvider>
                     <FolderUpdateProvider>
-                      
-                    <UserProfile />
-
+                      <TaskProvider>
+                        <UserProfile />
+                      </TaskProvider>
                     </FolderUpdateProvider>
                  </FolderProvider>
               </PrivateRoute>

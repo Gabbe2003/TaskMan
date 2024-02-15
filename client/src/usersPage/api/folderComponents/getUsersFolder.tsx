@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useFolderUpdate } from '../../utilities/folderUpdatecontext';
+import { useFolderUpdate } from '../../utilities/folder/folderUpdatecontext';
 // Ensure FontAwesome is correctly imported
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faXmark, faPencilAlt, faStar } from '@fortawesome/free-solid-svg-icons';
-import deleteFolder from './deleteFolder';
+// import deleteFolder from './deleteFolder';
+import { ITask } from '../../../interface/data';
+import { handleDeleteFolder } from '../../../components/folderDeleteComponents';
 
-interface Task {
-  name: string;
-  subTask: string;
-  priority: string;
-  status: string;
-  dueDate: Date | string;
-  createdTask: Date;
-}
 
-interface UserData {
+interface IUserData {
   _id: string;
   name: string;
   favorite: boolean;
   dueDate: Date | string;
-  tasks: Task[];
+  tasks: ITask[];
   owner?: string;
   __v?: number;
 }
 
 const UserDataDisplay: React.FC = () => {
-  const [userData, setUserData] = useState<UserData[]>([]);
-  const [selectedTasks, setSelectedTasks] = useState<Task[] | null>(null);
+  const [userData, setUserData] = useState<IUserData[]>([]);
+  const [selectedTasks, setSelectedTasks] = useState<ITask[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { updateSignal } = useFolderUpdate(); 
+  const { triggerUpdate, updateSignal } = useFolderUpdate(); 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,9 +42,9 @@ const UserDataDisplay: React.FC = () => {
     };
 
     fetchUserData();
-  }, [updateSignal]); 
+  }, [updateSignal, triggerUpdate]); 
 
-  const openModal = (tasks: Task[]) => {
+  const openModal = (tasks: ITask[]) => {
     setSelectedTasks(tasks);
   };
 
@@ -58,21 +52,27 @@ const UserDataDisplay: React.FC = () => {
     setSelectedTasks(null);
   };
 
+  const onDeleteFolder = (folderId: string) => {
+    handleDeleteFolder(folderId);
+    triggerUpdate() 
+  };
+
+
   // Placeholder function implementations
   // Assuming handleDeleteFolder is correctly importing deleteFolder
-const handleDeleteFolder = async (folderId: string) => {
-  try {
-    const result = await deleteFolder(folderId);
-    console.log(result);
-    console.log('Successfully deleted folder with ID:', folderId);
-    // After deletion, trigger UI update
-    // updateSignal(); // Make sure to define or call updateSignal if you're updating UI or state
-  } catch (error) {
-    console.log(`Error from the function ${folderId}`)
-    console.error("Error when trying to delete folder:", error);
-    // Handle error appropriately
-  }
-};
+// const handleDeleteFolder = async (folderId: string) => {
+//   try {
+//     const result = await deleteFolder(folderId);
+//     console.log(result);
+//     console.log('Successfully deleted folder with ID:', folderId);
+//     // After deletion, trigger UI update
+//     // updateSignal(); // Make sure to define or call updateSignal if you're updating UI or state
+//   } catch (error) {
+//     console.log(`Error from the function ${folderId}`)
+//     console.error("Error when trying to delete folder:", error);
+//     // Handle error appropriately
+//   }
+// };
 
 
   const handleToggleFavorite = async (_id: string) => {
@@ -109,7 +109,7 @@ const handleDeleteFolder = async (folderId: string) => {
               <FontAwesomeIcon icon={faBars} />
             </button>
             <ul className="dropdown-menu" aria-labelledby={`dropdownMenuButton-${_id}`}>
-              <li><button className="dropdown-item" onClick={() => handleDeleteFolder(_id)}><FontAwesomeIcon icon={faXmark} /> Delete</button></li>
+              <li><button className="dropdown-item" onClick={() => onDeleteFolder(_id)}><FontAwesomeIcon icon={faXmark} /> Delete</button></li>
               <li><button className="dropdown-item" onClick={() => handleToggleFavorite(_id)}><FontAwesomeIcon icon={faStar} /> Toggle Favorite</button></li>
               <li><button className="dropdown-item" onClick={() => handleEditFolder(_id)}><FontAwesomeIcon icon={faPencilAlt} /> Edit Folder</button></li>
               <li><button className="dropdown-item" onClick={() => handleChangeName(_id)}>Change Name</button></li>
