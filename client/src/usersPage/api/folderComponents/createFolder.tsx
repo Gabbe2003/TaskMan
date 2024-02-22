@@ -8,7 +8,6 @@ import { ITask } from '../../../interface/data';
 const HandleCreateFolder = () => {
     const { state, dispatch } = useContext(FolderContext)!;
     const { triggerUpdate  } = useFolderUpdate();
-    const [validationError, setValidationError] = React.useState('');
     const initialFolderFormState = {
       name: '',
       favorite: false,
@@ -23,19 +22,9 @@ const HandleCreateFolder = () => {
         createdTask: new Date().toISOString() 
       }],
     };
-    
-    const validateForm = () => {
-      if (!state.newFolderForm.name.trim()) {
-        setValidationError('Folder name is required.');
-        return false;
-      }
-      setValidationError('');
-      return true;
-    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!validateForm()) return;
 
       const { name, favorite, dueDate, tasks } = state.newFolderForm;
 
@@ -43,12 +32,14 @@ const HandleCreateFolder = () => {
         ...task,
         name: task.name.trim() ? task.name : name, 
       }));
+
       const folderData = {
         name,
         favorite,
         dueDate,
         tasks: updatedTasks,
       };
+
       try {
         const response = await axios.post('http://localhost:8000/post', folderData, {
           withCredentials: true,
@@ -63,7 +54,6 @@ const HandleCreateFolder = () => {
         console.error('Failed to create folder:', error);
       }
     };
-
 
     const handleFormChange = (field: string, value: string | boolean) => {
       const [key, subKey] = field.split('.');
@@ -83,7 +73,9 @@ const HandleCreateFolder = () => {
           [key]: value,
         }));
       }
-    };const handleTaskChange = (index: number, field: keyof ITask, value: string | Date) => {
+    };
+    
+    const handleTaskChange = (index: number, field: keyof ITask, value: string | Date) => {
       const newTasks = [...state.newFolderForm.tasks];
       if (!newTasks[index]) {
         // Initialize a default task structure if it doesn't exist
@@ -108,14 +100,12 @@ const HandleCreateFolder = () => {
         // Assuming value is properly formatted for date fields; convert to string if necessary
         updatedValue = (value instanceof Date) ? value.toISOString() : value;
       }
-    
       // Apply the updated value to the task
       newTasks[index] = { ...newTasks[index], [field]: updatedValue };
     
       // Dispatch the updated task array to the state
       dispatch(updateNewFolderForm({ ...state.newFolderForm, tasks: newTasks }));
     };
-    
 
     return (
       <>
@@ -132,7 +122,6 @@ const HandleCreateFolder = () => {
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="modal-body">
-                  {validationError && <div className="alert alert-danger">{validationError}</div>}
     
                   {/* Folder Information Fieldset */}
                   <fieldset>

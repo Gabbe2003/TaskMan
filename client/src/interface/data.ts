@@ -30,8 +30,8 @@
     id: string; 
     name: string;
     subTask: string;
-    priority: 'low' | 'medium' | 'high';
-    status: 'completed' | 'in progress' | 'pending';
+    priority: string
+    status: string
     dueDate: string | Date; 
     createdTask: string | Date;
   }
@@ -52,7 +52,6 @@
     };
   }
   
-
   export interface IFolder {
     id: string;
     name: string;

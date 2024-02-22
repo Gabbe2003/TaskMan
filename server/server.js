@@ -22,8 +22,11 @@ app.use(verifyJWT);
 app.use('/logout', require('./routes/login/logout'));
 app.use('/get', require('./routes/api/getFolder'));
 app.use('/delete', require('./routes/api/deleteFolder'));
+app.use('/delete/task', require('./routes/api/deleteTask'));
 app.use('/put', require('./routes/api/updateFolder'));
+app.use('/put/tasks', require('./routes/api/updateTask'));
 app.use('/post', require('./routes/api/postFolder'));
+app.use('/post/tasks', require('./routes/api/postTasksInFolder'));
 
 
 app.get('/verifyUser', verifyJWT, (req, res) => {
