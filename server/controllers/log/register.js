@@ -43,7 +43,6 @@ const handleNewUser = async (req, res) => {
             password: password, 
         });
 
-        const result = await newUser.save();
 
         res.status(201).json({ 'success': `New user ${username} created!` });
     } catch (err) {

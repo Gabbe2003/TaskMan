@@ -5,6 +5,7 @@ const addTaskToFolder = async (req, res) => {
     const folderId = req.params.folderId; // Get the folder ID from the URL parameters
     const taskData = req.body; // Get the new task data from the request body
 
+    console.log(req.params,'params');
     // Authenticate the user and get user's ID from the request (ensure you have middleware to do this)
     if (!req.user || !req.user.id) {
         return res.status(401).json({ 'Message': errorMessages.unauthorizedUser });

@@ -1,7 +1,21 @@
-import React, { useState } from 'react';
-import { ITask } from '../../../interface/data'; // Ensure this path is correct
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
-const TaskForm = ({ show, onClose, onSubmit, initialTask, folderId }: { show: boolean, onClose: () => void, onSubmit: (task: ITask) => void, initialTask?: ITask, folderId: string }) => {
+import { TaskContext } from '../../utilities/tasks/taskReducer'; // Adjust the import path as needed
+import { ITask } from '../../../interface/data'; // Ensure this path is correct
+import { useFolderUpdate } from '../../utilities/folder/folderUpdatecontext';
+
+interface ITaskFormProps {
+  show: boolean;
+  onClose: () => void;
+  initialTask?: ITask; 
+  folderId: string | null;
+  onSubmit: (newTask: ITask) => void; 
+
+}
+
+
+const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folderId}) => {
+  const { triggerUpdate } = useFolderUpdate();
     const [task, setTask] = useState<ITask>(initialTask || {
         id: '',
         name: '',
@@ -11,33 +25,31 @@ const TaskForm = ({ show, onClose, onSubmit, initialTask, folderId }: { show: bo
         status: 'pending',
         createdTask: new Date().toISOString(),
     });
-    
+
+    const { dispatch } = useContext(TaskContext)!;
+
     const handleChange = (field: keyof ITask, value: string) => {
-        // console.log(`handleChange: Updating field ${field} to value ${value}`); // Log field changes
-        setTask(prevTask => {
-            const updatedTask = { ...prevTask, [field]: value };
-            // console.log('handleChange: New task state', updatedTask); // Log new state
-            return updatedTask;
-        });
+        setTask(prevTask => ({ ...prevTask, [field]: value }));
     };
-    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('handleSubmit: Submitting task', task); // Log submission attempt
+
         try {
-            const response = await axios.put(`http://localhost:8000/put/${folderId}`, task, {
+            // Perform the POST request to add the task to the backend
+            const response = await axios.post(`http://localhost:8000/post/tasks/${folderId}`, task, {
                 withCredentials: true,
             });
-            console.log('handleSubmit: Task submitted successfully', response.data); // Log successful submission
-            console.log(folderId)
-            onSubmit(task); // This might need logging inside the parent component
+            console.log('Task submitted successfully', response.data); // Log or handle response as needed
+            triggerUpdate();
+            // Dispatch ADD_TASK action to update the global state with the new task
+            dispatch({ type: 'ADD_TASK', payload: { task: response.data, folderId: response.data } });
+            
+            onClose(); // Close the form/modal
         } catch (error) {
-            console.error('handleSubmit: Failed to submit task', error); // Log submission error
-            console.log(folderId)
+            console.error('Failed to submit task', error);
         }
-        onClose(); // Log this action in the parent component
     };
-    
 
 
   return (

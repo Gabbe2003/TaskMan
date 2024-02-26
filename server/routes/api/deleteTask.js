@@ -4,6 +4,6 @@ const { deleteTaskById } = require('../../controllers/postController/deleteTask'
 
 
 // Route for deleting a task within a folder
-router.delete('/folder/:folderId/task/:taskId', deleteTaskById);
+router.delete('/:folderId/:taskId', deleteTaskById);
 
 module.exports = router;

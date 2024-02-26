@@ -3,6 +3,6 @@ const router = express.Router();
 const { addTaskToFolder } = require('../../controllers/postController/createTask');
 
 
-router.post('/:folderId/tasks', addTaskToFolder);
+router.post('/:folderId', addTaskToFolder);
 
 module.exports = router;
