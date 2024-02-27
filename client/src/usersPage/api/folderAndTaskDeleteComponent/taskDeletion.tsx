@@ -7,7 +7,7 @@ export const handleDeleteTaskInFolder = async (folderId: string, taskId: string 
       console.log('Successfully deleted task with ID:', taskId);
       console.log(`folderId ${folderId}, taskId ${taskId}`);
     } catch (error) {
-      console.log(`Error from the function ${folderId} and taskId ${taskId}`)
+      console.log(` ${folderId} and taskId ${taskId}`)
       console.error("Error when trying to delete task in the folder:", error);
     }
   }

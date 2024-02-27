@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const DELETE_URL = 'http:localhost:8000/delete/task/'
+const DELETE_URL = 'http://localhost:8000/delete/task/'
 
 export const delteTaskInFolder = async (folderId: string, taskId: string) => {
     try {

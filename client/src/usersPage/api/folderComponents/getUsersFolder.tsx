@@ -8,7 +8,6 @@ import { handleDeleteFolder } from '../folderAndTaskDeleteComponent/folderDelete
 import { handleDeleteTaskInFolder } from '../folderAndTaskDeleteComponent/taskDeletion';
 import TaskForm from '../taskComponents/createTaskInFolder';
 import { useFolderUpdate } from '../../utilities/folder/folderUpdatecontext';
-// Adjust the import path as necessary
 import { TaskContext } from '../../utilities/tasks/taskReducer';
 
 interface IUserData {
@@ -25,7 +24,7 @@ const UserDataDisplay: React.FC = () => {
   const [userData, setUserData] = useState<IUserData[]>([]);
   const [selectedTasks, setSelectedTasks] = useState<ITask[] | null>(null);
   const [isAddingTask, setIsAddingTask] = useState(false);
-  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [currentFolderId, setCurrentFolderId] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { triggerUpdate, updateSignal } = useFolderUpdate(); 
@@ -40,7 +39,15 @@ const UserDataDisplay: React.FC = () => {
         const response = await axios.get('http://localhost:8000/get', {
           withCredentials: true,
         });
-        setUserData(response.data);
+        console.log(response.data); // Log to see what's being returned
+        if (response.data.length > 0) {
+          setUserData(response.data);
+          // If expecting an array, use the first element for setting the current folder ID
+          setCurrentFolderId(response.data[0]._id); 
+        } else {
+          console.error('No data received');
+          setError('No data received');
+        }
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
@@ -48,9 +55,10 @@ const UserDataDisplay: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     fetchUserData();
-  }, [updateSignal]);
+  }, [updateSignal]); // Dependency on updateSignal to re-fetch as needed
+  
 
   const onDeleteFolder = (folderId: string) => {
     handleDeleteFolder(folderId);
@@ -65,7 +73,7 @@ const UserDataDisplay: React.FC = () => {
   const openModal = (tasks: ITask[] | null, folderId?: string, addingTask = false) => {
     console.log("Opening modal for folderId:", folderId); // Debug log to ensure folderId is passed correctly
     setSelectedTasks(tasks);
-    setCurrentFolderId(folderId || null); // Ensure folderId is being correctly set here
+    setCurrentFolderId(folderId || ''); // Ensure folderId is being correctly set here
     setIsAddingTask(addingTask);
     setModalShow(true);
   };
@@ -73,7 +81,7 @@ const UserDataDisplay: React.FC = () => {
 
   const closeModal = () => {
     setSelectedTasks(null);
-    setCurrentFolderId(null);
+    setCurrentFolderId('');
     setIsAddingTask(false);
     setModalShow(false);
   };
@@ -118,7 +126,7 @@ const UserDataDisplay: React.FC = () => {
             <h5 className="card-title">{name}</h5>
             <p className="card-text">Favorite: {favorite ? 'Yes' : 'No'}</p>
             <p className="card-text">Due: {new Date(dueDate).toLocaleDateString('en-GB')}</p>
-            <button className="btn btn-primary m-2" onClick={() => openModal(tasks)}>View Tasks</button>
+            <button className="btn btn-primary m-2" onClick={() => openModal(tasks, _id, false)}>View Tasks</button>
             <button className="btn btn-primary m-2" onClick={() => openModal(null, _id, true )}>Add Task</button>
           </div>
         </div>
