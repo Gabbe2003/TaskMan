@@ -1,4 +1,4 @@
-import { deleteFolder } from "../folderComponents/deleteFolder";
+import { deleteFolder } from "../../folderComponents/deleteFolder";
 
 export const handleDeleteFolder = async (folderId: string) => {
     try {

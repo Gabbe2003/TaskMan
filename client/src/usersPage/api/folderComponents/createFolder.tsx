@@ -80,7 +80,7 @@ const HandleCreateFolder = () => {
       if (!newTasks[index]) {
         // Initialize a default task structure if it doesn't exist
         newTasks[index] = {
-          id: '',
+          _id: '',
           name: '',
           subTask: '',
           priority: 'low', // Assuming 'low' as default

@@ -5,11 +5,6 @@ const addTaskToFolder = async (req, res) => {
     const folderId = req.params.folderId; // Get the folder ID from the URL parameters
     const taskData = req.body; // Get the new task data from the request body
 
-    console.log(req.params,'params');
-    // Authenticate the user and get user's ID from the request (ensure you have middleware to do this)
-    if (!req.user || !req.user.id) {
-        return res.status(401).json({ 'Message': errorMessages.unauthorizedUser });
-    }
 
     try {
         // Find the folder by ID and ensure the requesting user is the owner
@@ -17,6 +12,13 @@ const addTaskToFolder = async (req, res) => {
 
         if (!folder) {
             return res.status(404).json({ 'Message': errorMessages.folderNotFound });
+        }
+
+        // Check if a task with the same name already exists in the folder
+        const isDuplicateTask = folder.tasks.some(task => task.name === taskData.name);
+        if (isDuplicateTask) {
+            // If a duplicate task name is found, return an error response
+            return res.status(400).json({ 'Message': 'A task with the same name already exists in this folder.' });
         }
 
         // Create a new task based on the task schema

@@ -13,13 +13,13 @@ const taskSchema = new Schema({
     },
     priority: {
         type: String,
-        enum: ['low', 'medium', 'high'],
-        default: 'low'
+        enum: ['Low', 'Medium', 'High'],
+        default: 'Low'
     },
     status: { 
         type: String,
-        enum: ['completed', 'in progress', 'pending'],
-        default: 'pending'
+        enum: ['Completed', 'In progress', 'Pending'],
+        default: 'Pending'
     },
     dueDate: {
         type: Date,

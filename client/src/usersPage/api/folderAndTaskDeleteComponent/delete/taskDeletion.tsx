@@ -1,4 +1,4 @@
-import { delteTaskInFolder } from "../taskComponents/deleteTaskInFolder";
+import { delteTaskInFolder } from "../../taskComponents/deleteTaskInFolder";
 
 export const handleDeleteTaskInFolder = async (folderId: string, taskId: string ) => {
     try {

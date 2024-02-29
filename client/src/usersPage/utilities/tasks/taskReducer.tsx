@@ -15,7 +15,7 @@ const taskReducer = (state: ITaskState, action: IAction): ITaskState => {
       return {
         ...state,
         folders: state.folders.map(folder =>
-          folder.id === action.payload.folderId ? { ...folder, tasks: folder.tasks?.filter(task => task.id !== action.payload.taskId) ?? [] } : folder
+          folder.id === action.payload.folderId ? { ...folder, tasks: folder.tasks?.filter(task => task._id !== action.payload.taskId) ?? [] } : folder
         ),
       };
     case 'UPDATE_TASK':
@@ -26,7 +26,7 @@ const taskReducer = (state: ITaskState, action: IAction): ITaskState => {
             return {
               ...folder,
               tasks: folder.tasks?.map(task =>
-                task.id === action.payload.original.id ? action.payload.updated : task
+                task._id === action.payload.original._id ? action.payload.updated : task
               ) ?? [],
             };
           }
@@ -47,7 +47,7 @@ const taskReducer = (state: ITaskState, action: IAction): ITaskState => {
         folders: state.folders.map(folder => ({
           ...folder,
           tasks: folder.tasks?.map(task => 
-            task.id === action.payload.taskId ? { ...task, ...action.payload } : task
+            task._id === action.payload.taskId ? { ...task, ...action.payload } : task
           ) ?? [],
         })),
       };

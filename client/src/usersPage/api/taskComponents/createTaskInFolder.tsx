@@ -10,19 +10,17 @@ interface ITaskFormProps {
   initialTask?: ITask; 
   folderId: string | null;
   onSubmit: (newTask: ITask) => void; 
-
 }
-
 
 const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folderId}) => {
   const { triggerUpdate } = useFolderUpdate();
     const [task, setTask] = useState<ITask>(initialTask || {
-        id: '',
+        _id: '',
         name: '',
         subTask: '',
         dueDate: '',
-        priority: 'low',
-        status: 'pending',
+        priority: 'Low',
+        status: 'Pending',
         createdTask: new Date().toISOString(),
     });
 
@@ -69,16 +67,16 @@ const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folder
       {/* Sub Task */}
       <div className="mb-3">
         <label htmlFor="taskSubTask" className="form-label">Sub Task</label>
-        <input type="text" className="form-control" id="taskSubTask" value={task.subTask} onChange={(e) => handleChange('subTask', e.target.value)} />
+        <textarea className="form-control" id="taskSubTask" value={task.subTask} onChange={(e) => handleChange('subTask', e.target.value)} />
       </div>
 
       {/* Priority */}
       <div className="mb-3">
         <label htmlFor="taskPriority" className="form-label">Priority</label>
         <select className="form-select" id="taskPriority" value={task.priority} onChange={(e) => handleChange('priority', e.target.value)}>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
         </select>
       </div>
 
@@ -86,9 +84,9 @@ const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folder
       <div className="mb-3">
         <label htmlFor="taskStatus" className="form-label">Status</label>
         <select className="form-select" id="taskStatus" value={task.status} onChange={(e) => handleChange('status', e.target.value)}>
-          <option value="pending">Pending</option>
-          <option value="in progress">In Progress</option>
-          <option value="completed">Completed</option>
+          <option value="Pending">Pending</option>
+          <option value="In progres">In progres</option>
+          <option value="Completed">Completed</option>
         </select>
       </div>
 
