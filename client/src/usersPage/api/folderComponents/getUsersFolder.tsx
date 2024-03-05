@@ -63,7 +63,7 @@ const UserDataDisplay: React.FC = () => {
     };
   
     fetchUserData();
-  }, [updateSignal]);
+  }, [updateSignal, triggerUpdate]);
 
   const onDeleteFolder = (folderId: string) => {
     handleDeleteFolder(folderId);

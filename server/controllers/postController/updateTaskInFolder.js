@@ -10,35 +10,46 @@ module.exports.updateTaskInFolder = async (req, res) => {
         return res.status(400).json({ 'Message': 'Invalid folder ID or task ID format' });
     }
 
+    // Define which task fields can be updated
+    const allowedUpdates = ['name', 'subTask', 'priority', 'status', 'dueDate'];
+    const isValidOperation = Object.keys(updatedTaskData).every((key) => allowedUpdates.includes(key));
+
+    if (!isValidOperation) {
+        return res.status(400).json({ 'Message': 'Invalid updates!' });
+    }
+
     try {
         const folder = await FolderModel.findOne({ _id: folderId, owner: userId }).lean();
         if (!folder) {
             return res.status(404).json({ 'Message': 'Folder not found or you do not have permission to access it.' });
         }
 
-        const task = folder.tasks.find(t => t._id.toString() === taskId);
-        if (!task) {
+        const taskIndex = folder.tasks.findIndex(t => t._id.toString() === taskId);
+        if (taskIndex === -1) {
             return res.status(404).json({ 'Message': 'Task not found' });
         }
 
         // Check if the task name is being updated and if it already exists in the folder
         if (updatedTaskData.name) {
-            const isNameTaken = folder.tasks.some(t => t.name === updatedTaskData.name && t._id.toString() !== taskId);
+            const isNameTaken = folder.tasks.some((t, index) => t.name === updatedTaskData.name && index !== taskIndex);
             if (isNameTaken) {
                 return res.status(409).json({ 'Message': 'A task with this name already exists in the folder.' });
             }
         }
 
-        // Update the task object with the new data
-        Object.assign(task, updatedTaskData);
+        // Update the task object with the new data, ensuring only allowed fields are updated
+        Object.keys(updatedTaskData).forEach((key) => {
+            if (allowedUpdates.includes(key)) {
+                folder.tasks[taskIndex][key] = updatedTaskData[key];
+            }
+        });
 
-        // Since MongoDB doesn't directly support updating nested documents easily,
-        // you have to mark the parent document as modified for the changes to be saved
+        // Update the folder document in the database
         const updatedFolder = await FolderModel.findOneAndUpdate(
-            { "_id": folderId, "tasks._id": taskId },
+            { "_id": folderId },
             { 
                 "$set": {
-                    "tasks.$": task
+                    "tasks": folder.tasks
                 }
             },
             { new: true }
@@ -50,6 +61,6 @@ module.exports.updateTaskInFolder = async (req, res) => {
             res.status(400).json({ 'Message': 'Failed to update task.' });
         }
     } catch (err) {
-        res.status(500).json({ 'Message': 'An error occurred while updating the task. Please try again later.' });
+        res.status(500).json({ 'Message': 'An error occurred while updating the task. Please try again later.', error: err });
     }
 };

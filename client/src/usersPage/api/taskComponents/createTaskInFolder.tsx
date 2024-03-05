@@ -23,7 +23,19 @@ const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folder
         status: 'Pending',
         createdTask: new Date().toISOString(),
     });
-
+    
+    const resetForm = () => {
+      setTask({
+        _id: '',
+        name: '',
+        subTask: '',
+        dueDate: '',
+        priority: 'Low',
+        status: 'Pending',
+        createdTask: new Date().toISOString(),
+      });
+    };
+  
     const { dispatch } = useContext(TaskContext)!;
 
     const handleChange = (field: keyof ITask, value: string) => {
@@ -43,7 +55,8 @@ const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folder
             // Dispatch ADD_TASK action to update the global state with the new task
             dispatch({ type: 'ADD_TASK', payload: { task: response.data, folderId: response.data } });
             
-            onClose(); // Close the form/modal
+            onClose(); 
+            resetForm();
         } catch (error) {
             console.error('Failed to submit task', error);
         }
