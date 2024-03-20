@@ -27,7 +27,7 @@
     | { type: 'SET_TASK_DUE_DATE'; payload: { taskId: string; dueDate: string } }
 
   export interface ITask {
-    _id: string; 
+    _id?: string; 
     name: string;
     subTask: string;
     priority: string
@@ -72,11 +72,7 @@
       tasks: ITask[];
     };
   }
-  export interface IAlert {
-    message: string;
-    type: string;
-  }
 
-  export interface IErrorResponse {
+ export interface IErrorResponse {
     message: string;
   }

@@ -39,10 +39,11 @@ const handleNewUser = async (req, res) => {
         // Create a new user instance and save it to the database
         const newUser = new User({
             username: username,
-            email: email.toLowerCase(), 
+            email: email, 
             password: password, 
         });
 
+        await newUser.save();
 
         res.status(201).json({ 'success': `New user ${username} created!` });
     } catch (err) {

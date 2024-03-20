@@ -16,27 +16,25 @@ const setupInterceptors = (setUser:any) => {
       // Check for 401 error, if we haven't already tried to refresh the token, and if a refresh hasn't failed before
       if (error.response && error.response.status === 401 && !originalRequest._retry && !tokenRefreshAttempted) {
         originalRequest._retry = true;
-        tokenRefreshAttempted = true; // Mark that a token refresh attempt is being made
+        tokenRefreshAttempted = true; 
 
         try {
           const refreshResponse = await plainHttp.post('/refresh');
           if (refreshResponse.status === 200) {
-            setUser(refreshResponse.data); // Update user with new token data
-            tokenRefreshAttempted = false; // Reset flag on successful refresh
-            return plainHttp(originalRequest); // Retry the original request with the new token
+            setUser(refreshResponse.data); 
+            tokenRefreshAttempted = false; 
+            return plainHttp(originalRequest);
           } else {
             // If refresh wasn't successful, handle appropriately without retrying
             console.log('Unable to refresh token, handling failure...');
-            return Promise.reject(); // Stop further attempts by rejecting the promise
+            return Promise.reject(); 
           }
         } catch (refreshError) {
           console.log('Token refresh failed:', refreshError);
-          // Handle the failure (e.g., logout or redirect to login) without retrying
-          return Promise.reject(refreshError); // Reject the promise to stop further attempts
+          return Promise.reject(refreshError); 
         }
       }
 
-      // For other errors or conditions, simply reject the promise
       return Promise.reject(error);
     }
   );

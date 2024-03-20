@@ -1,16 +1,13 @@
-
-
 const User = require('../../models/usersSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const errorMessages = require('../../errors/errorMessages');
 
 const handleLogin = async (req, res) => {
-    //We are getting the cookies from the request.
-    const cookies = req.cookies;
-    console.log(cookies)
     //getting two varibales from the request,identifier and password. We intialize the identifier later.
     const { identifier, password } = req.body;
+    const cookies = req.cookies;
+
 
     if (!identifier || !password) {
         return res.status(400).json({ 'message': errorMessages.requiredUsernameAndPassword });
@@ -22,6 +19,7 @@ const handleLogin = async (req, res) => {
             { username: identifier } 
         ]
     }).exec();
+    
 
     if (!foundUser) {
         return res.status(401).json({ 'message':  errorMessages.userNotFound  });
@@ -64,12 +62,13 @@ const handleLogin = async (req, res) => {
         foundUser.refreshToken = [...newRefreshTokenArray, refreshToken];
         await foundUser.save();
 
-        // Clear the old refresh token cookie if it exists
+        // Clear the old token cookie if it exists
         if (cookies?.jwt) {
             res.clearCookie('accessToken', { httpOnly: true, sameSite: 'Lax', secure: false }); 
+            res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'Lax', secure: false }); 
         }
         
-        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 30 * 60 * 1000 }); // 15 minutes
+        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 30 * 60 * 1000 }); // 30 minutes
 
         // Set the refresh token as a separate cookie
         res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7 days

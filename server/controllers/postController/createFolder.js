@@ -4,7 +4,8 @@ const FolderModel = require('../../models/taskSchema');
 module.exports.createFolder = async (req, res) => {
   console.log("Received request to create folder with body:", req.body); // Log the incoming request body
 
-  const { name, favorite, tasks } = req.body;
+  let { name, tasks } = req.body;
+  name = name.trim();
 
   // Authenticate the user and get user's ID from the request
   if (!req.user || !req.user.id) {
@@ -12,9 +13,9 @@ module.exports.createFolder = async (req, res) => {
     return res.status(401).json({ 'Message': errorMessages.unauthorizedUser });
   }
 
-  // Check if name exists
+  // Check if name exists and is not empty after trimming
   if (!name) {
-    console.log("Received empty name for folder"); // Log missing name
+    console.log("Received empty or whitespace-only name for folder"); // Log missing or invalid name
     return res.status(400).json({ 'Message': errorMessages.emptyFolderName });
   }
 
@@ -33,7 +34,6 @@ module.exports.createFolder = async (req, res) => {
     // Create a new folder and assign the authenticated user's ID as the owner
     const folder = new FolderModel({
       name,
-      favorite,
       tasks,
       owner: req.user.id 
     });

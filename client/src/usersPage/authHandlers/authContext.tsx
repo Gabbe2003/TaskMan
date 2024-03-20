@@ -1,25 +1,25 @@
 import React, { createContext, useState, useCallback, ReactNode } from 'react';
 import { plainHttp } from './AxiosInterceptor';
 
-interface User {
+interface IUser {
   id: string;
   username: string;
 }
 
-export interface AuthContextType {
-  user: User | null;
-  login: (userData: User) => void;
+export interface IAuthContextType {
+  user: IUser | null;
+  login: (userData: IUser) => void;
   logout: () => void;
   verifySession: () => Promise<boolean>;
   isSessionLoading: boolean;
-  setUser: (userData: User | null) => void;
+  setUser: (userData: IUser | null) => void;
 }
 
-interface AuthProviderProps {
+interface IAuthProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext<AuthContextType>({
+const AuthContext = createContext<IAuthContextType>({
   user: null,
   login: () => {},
   logout: () => {},
@@ -28,8 +28,8 @@ const AuthContext = createContext<AuthContextType>({
   setUser: () => {}
 });
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<IUser | null>(null);
   const [isSessionLoading, setIsSessionLoading] = useState(true);
 
   const verifySession = useCallback(async (): Promise<boolean> => {
@@ -48,7 +48,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const logout = () => {
-    console.log('User logged out');
     setUser(null);
   };
 

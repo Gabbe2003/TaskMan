@@ -6,7 +6,7 @@ const reducer = (state: IFolderState, action: IAction): IFolderState => {
     switch (action.type) {
       case 'ADD_FOLDER':
         return { ...state, folders: [...state.folders, action.payload] };
-      case 'REMOVE_FOLDER':
+        case 'REMOVE_FOLDER':
         return { ...state, folders: state.folders.filter(folder => folder.id !== action.payload.id) };
         case 'TOGGLE_FAVORITE':
             return {

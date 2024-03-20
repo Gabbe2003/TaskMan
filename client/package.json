@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
     "react-router-dom": "^6.21.3",
+    "react-toastify": "^10.0.4",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "sass": "^1.72.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   }

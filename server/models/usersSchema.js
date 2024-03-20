@@ -20,7 +20,11 @@ const UserSchema = new Schema({
         trim: true,
         lowercase: true,
     },
-    refreshToken: []
+    refreshToken:[],
+    passwordResetToken: {
+        token: { type: String }, 
+        expires: { type: Date },
+    } 
     },
 );
 

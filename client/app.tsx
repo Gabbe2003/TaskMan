@@ -8,13 +8,15 @@ import AuthContext from './src/usersPage/authHandlers/authContext';
 import LoginForm from './src/usersPage/loginUser/login';
 import RegisterForm from './src/usersPage/registerUser/register';
 import PrivateRoute from './src/usersPage/authHandlers/PrivateRoute';
-import UserProfile from './src/usersPage/api/logout';
+import UserProfile from './src/usersPage/userMainPage';
 import SessionInitializer from './src/usersPage/authHandlers/SessionInitializer';
 import { setupInterceptors } from './src/usersPage/authHandlers/AxiosInterceptor';
 import { FolderProvider } from './src/usersPage/utilities/folder/folderReducer';
 import { FolderUpdateProvider } from './src/usersPage/utilities/folder/folderUpdatecontext';
 import { TaskProvider } from './src/usersPage/utilities/tasks/taskReducer';
-
+import { ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
+import ResetPasswordForm from './src/usersPage/settings/resetPasswordForm';
 
 const App: React.FC = () => {
   const { user, setUser, verifySession } = useContext(AuthContext);
@@ -34,20 +36,23 @@ const App: React.FC = () => {
       <AuthProvider>
         <Router>
           <SessionInitializer />
+           <ToastContainer /> {/*Toast container here so that all the children has access to it */}
           <Routes>
             <Route path="/" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/dashboard" element={
               <PrivateRoute>
-                  <FolderProvider>
-                    <FolderUpdateProvider>
-                      <TaskProvider>
-                        <UserProfile />
-                      </TaskProvider>
-                    </FolderUpdateProvider>
-                 </FolderProvider>
+                <FolderProvider>
+                  <FolderUpdateProvider>
+                    <TaskProvider>
+                      <UserProfile />
+                    </TaskProvider>
+                  </FolderUpdateProvider>
+                </FolderProvider>
               </PrivateRoute>
             } />
+            <Route path="/reset-password" element={<ResetPasswordForm />} />
+
           </Routes>
         </Router>
       </AuthProvider>

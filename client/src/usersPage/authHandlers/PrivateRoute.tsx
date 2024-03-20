@@ -7,14 +7,15 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { user, isSessionLoading } = useContext(AuthContext);
+  const { user, isSessionLoading, logout } = useContext(AuthContext);
 
   if (isSessionLoading) {
-    return <div className='d-flex align-items-center'>Loading...</div>; // Show loading indicator
+    return; 
   }
 
   if (!user) {
     console.error('Access denied. User not authenticated.');
+    logout();
     return <Navigate to="/" />;
   }
   return children;

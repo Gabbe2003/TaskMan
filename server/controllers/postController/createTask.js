@@ -2,9 +2,14 @@ const FolderModel = require('../../models/taskSchema'); // Assuming your folder 
 const errorMessages = require('../../errors/errorMessages');
 
 const addTaskToFolder = async (req, res) => {
-    const folderId = req.params.folderId; // Get the folder ID from the URL parameters
-    const taskData = req.body; // Get the new task data from the request body
+    const folderId = req.params.folderId; // Get the folder ID from the URL parameters.
+    let taskData = req.body; // Get the new task data from the request body
 
+    // Trim the task name and check if it's empty
+    taskData.name = taskData.name.trim();
+    if (!taskData.name) {
+        return res.status(400).json({ 'Message': 'Task must have a name' });
+    }
 
     try {
         // Find the folder by ID and ensure the requesting user is the owner
@@ -23,7 +28,7 @@ const addTaskToFolder = async (req, res) => {
 
         // Create a new task based on the task schema
         const newTask = {
-            name: taskData.name,
+            name: taskData.name, // Already trimmed above
             subTask: taskData.subTask,
             priority: taskData.priority,
             status: taskData.status,

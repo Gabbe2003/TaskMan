@@ -1,0 +1,45 @@
+/* Background styling */
+.background-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative;
+}
+
+/* Overlay/Mask styling */
+.background-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 1);
+}
+
+.card-container {
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+  margin: 2rem; 
+}
+
+@media (max-width: 768px) {
+.background-image-container .MDBCard {
+  margin: 1rem; 
+  max-width: 95%;
+}
+
+.MDBCardBody {
+  padding: 1rem;
+
+}
+
+.text-center {
+  font-size: 4vw; 
+}
+}

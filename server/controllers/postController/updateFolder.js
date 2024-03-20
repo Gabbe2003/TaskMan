@@ -3,20 +3,27 @@ const mongoose = require('mongoose');
 
 module.exports.updateFolder = async (req, res) => {
     const { folderId } = req.params;
-    const updatedData = req.body;
+    let updatedData = req.body;
     const userId = req.user.id.toString();
 
     if (!mongoose.Types.ObjectId.isValid(folderId)) {
         return res.status(400).json({ 'Message': 'Invalid folder ID format' });
     }
 
-    // Check if the updatedData contains 'name' field to change the folder name
-    if (updatedData.name) {
-        // Check if another folder with the same name and owner already exists
+    // If updatedData has a 'name', trim it and check for emptiness or duplicity
+    if ('name' in updatedData && typeof updatedData.name === 'string') {
+        updatedData.name = updatedData.name.trim();
+
+        // If the name is empty after trimming, return an error response
+        if (!updatedData.name) {
+            return res.status(400).json({ 'Message': 'Folder name cannot be empty.' });
+        }
+
+        // Check if another folder with the same trimmed name and owner already exists
         const existingFolder = await FolderModel.findOne({
             name: updatedData.name,
             owner: userId,
-            _id: { $ne: folderId } 
+            _id: { $ne: folderId }  // Exclude the current folder from the check
         });
 
         if (existingFolder) {

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { TaskContext } from '../../utilities/tasks/taskReducer'; // Adjust the import path as needed
 import { ITask } from '../../../interface/data'; // Ensure this path is correct
 import { useFolderUpdate } from '../../utilities/folder/folderUpdatecontext';
+import { toast } from 'react-toastify';
 
 interface ITaskFormProps {
   show: boolean;
@@ -54,14 +55,15 @@ const TaskForm: React.FC<ITaskFormProps> = ({ show, onClose, initialTask, folder
             triggerUpdate();
             // Dispatch ADD_TASK action to update the global state with the new task
             dispatch({ type: 'ADD_TASK', payload: { task: response.data, folderId: response.data } });
-            
             onClose(); 
             resetForm();
-        } catch (error) {
-            console.error('Failed to submit task', error);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error:any) {
+          console.error('Failed to submit task', error);
+          onClose(); 
+          toast.error(error.response.data.Message);
         }
     };
-
 
   return (
     <div className={`modal ${show ? 'show' : ''}`} style={{ display: show ? 'block' : 'none' }} tabIndex={-1}>

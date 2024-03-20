@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const DELETE_URL = 'http://localhost:8000/delete/folder/';
+const DELETE_URL = 'http://localhost:8000/delete/';
 
 export const deleteFolder = async (folderId: string) => {
   try {

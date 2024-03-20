@@ -32,7 +32,7 @@ const taskSchema = new Schema({
 const folderSchema = new Schema({
     name: { type: String, required: true },
     favorite: { type: Boolean, default: false },
-    dueDate: { type: Date, default: Date.now},
+    dueDate: { type: Date, default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)},
     tasks: [taskSchema],
     owner: {
         type: String, 

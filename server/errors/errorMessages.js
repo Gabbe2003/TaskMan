@@ -1,6 +1,7 @@
 const errorMessages = {
     requiredUsernameAndPassword: 'Please enter both username/email and password.',
     userNotFound: 'Login failed. Please check your credentials and try again.',
+    userEmailNotFound: 'User email not found, Check your email!',
     invalidCredentials: 'Login failed. Please check your credentials and try again.',
     filedsAreEmpty: 'All fields are required.',
     wrongPassword:'Passwords must match, check your passwords.',

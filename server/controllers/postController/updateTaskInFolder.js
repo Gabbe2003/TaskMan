@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 module.exports.updateTaskInFolder = async (req, res) => {
     const { folderId, taskId } = req.params;
-    const updatedTaskData = req.body;
+    let updatedTaskData = req.body; // Use let since we might modify it
     const userId = req.user.id.toString();
 
     if (!mongoose.Types.ObjectId.isValid(folderId) || !mongoose.Types.ObjectId.isValid(taskId)) {
@@ -18,6 +18,14 @@ module.exports.updateTaskInFolder = async (req, res) => {
         return res.status(400).json({ 'Message': 'Invalid updates!' });
     }
 
+    // Trim and check the task name if it's being updated
+    if ('name' in updatedTaskData && typeof updatedTaskData.name === 'string') {
+        updatedTaskData.name = updatedTaskData.name.trim();
+        if (!updatedTaskData.name) {
+            return res.status(400).json({ 'Message': 'Task name cannot be empty.' });
+        }
+    }
+
     try {
         const folder = await FolderModel.findOne({ _id: folderId, owner: userId }).lean();
         if (!folder) {
@@ -29,7 +37,7 @@ module.exports.updateTaskInFolder = async (req, res) => {
             return res.status(404).json({ 'Message': 'Task not found' });
         }
 
-        // Check if the task name is being updated and if it already exists in the folder
+        // Check if the task name is being updated to a name that already exists in the folder
         if (updatedTaskData.name) {
             const isNameTaken = folder.tasks.some((t, index) => t.name === updatedTaskData.name && index !== taskIndex);
             if (isNameTaken) {

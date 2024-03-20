@@ -2,37 +2,34 @@ import React, { useContext, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import Alert from '../errorHandler';
-import { IAlert, IErrorResponse } from '../../interface/data';
-import AuthContext  from '../authHandlers/authContext';
+import { IErrorResponse } from '../../interface/data';
+import AuthContext from '../authHandlers/authContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import ForgetPasswordModal from '../settings/forgetPassword';
+import '../../style/loginPage.scss';
 
 interface ILoginForm {
   identifier: string;
   password: string;
 }
 
-
 const LoginForm: React.FC = () => {
   const { login } = useContext(AuthContext);
   const [passwordShown, setPasswordShown] = useState(false);
   const [loginForm, setLoginForm] = useState<ILoginForm>({ identifier: '', password: '' });
-  const [alert, setAlert] = useState<IAlert>({ message: '', type: '' });
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
-  };
-
-
-  const dismissAlert = () => {
-    setAlert({ message: '', type: '' }); // Reset the alert
   };
 
   const handleLoginFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setLoginForm({ ...loginForm, [name]: value });
   };
-
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,42 +38,36 @@ const LoginForm: React.FC = () => {
       const response = await axios.post(loginURL, loginForm, {
         withCredentials: true
       });
-
-        navigate('/dashboard'); // Navigate to dashboard upon successful session verification
-        login(response.data); // Update user state with login data
-    } catch (error) {
+      toast.success('Welcome to your Tasker!');
+      navigate('/dashboard');
+      login(response.data);
+      
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
       const axiosError = error as AxiosError<IErrorResponse>;
       if (axiosError.response && axiosError.response.data && axiosError.response.data.message) {
-        setAlert({ message: axiosError.response.data.message, type: 'error' });
+        toast.error(axiosError.response.data.message);
       } else if (axiosError.request) {
-        // Check if the request was made but no response was received
-        setAlert({ message: 'No response from the server. Please try again later.', type: 'error' });
+        toast.error('No response from the server. Please try again later.');
       } else {
-        // Other errors
         console.log('Error', axiosError.message);
-        setAlert({ message: 'An unexpected error occurred. Please try again later.', type: 'error' });
+        toast.error('An unexpected error occurred. Please try again later.');
       }
     }
   };
-
   return (
-    <div className='d-flex align-items-center justify-content-center' style={{ backgroundImage: 'url(https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp)', height: '100vh' }}>
+    <div className="background-image-container">
       <div className='mask gradient-custom-3'></div>
-      <div className='card m-5' style={{ maxWidth: '600px' }}>
-        <div className='card-body px-5'>
-          <p className="mt-3 text-center mb-5">Log in to your account</p>
-          
-          {/* Display alert message above the form */}
-          {alert.message && (
-            <Alert message={alert.message} type={alert.type} dismissAlert={dismissAlert} />
-          )}
-
+      {/* Adjust card margins for smaller screens */}
+      <div className='card m-3 m-sm-5' style={{ maxWidth: '90%', width: 'auto' }}>
+        <div className='card-body p-4 p-sm-5'>
+          <p className="text-center mb-5" style={{ fontSize: '1rem', margin: '1rem 0' }}>Log in to your account</p>
           <form onSubmit={handleLoginSubmit} className="needs-validation" noValidate>
-            <div className="mb-4">
+            <div className="mb-3 mb-sm-4">
               <label htmlFor="identifier" className="form-label">Username or Email</label>
               <input
                 type="text"
-                className="form-control form-control-lg"
+                className="form-control form-control-sm"
                 id="identifier"
                 name="identifier"
                 required
@@ -84,24 +75,32 @@ const LoginForm: React.FC = () => {
                 onChange={handleLoginFormChange}
               />
             </div>
-            <div className='mb-4'>
+            <div className='mb-3 mb-sm-4'>
               <label htmlFor="password" className="form-label">Password</label>
               <input
                 type={passwordShown ? "text" : "password"}
-                className="form-control form-control-lg"
+                className="form-control form-control-sm"
                 id="password"
                 name="password"
                 required
                 value={loginForm.password}
                 onChange={handleLoginFormChange}
               />
-              <button className="btn btn-secondary btn-sm" onClick={togglePasswordVisibility} type="button">
-                {passwordShown ? 'Hide' : 'Show'}
+              <button className="btn btn-secondary btn-sm my-2" onClick={togglePasswordVisibility} type="button">
+                {passwordShown ? <FaEyeSlash /> : <FaEye />}
               </button>
+              <div><a href='/Register'>Not a member?</a></div>
             </div>
-            <button type="submit" className="btn btn-primary btn-lg w-100">Login</button>
-            <a href='/Register'>Not a member? Sign up today!</a>
+            <button type="submit" className="btn btn-primary btn-sm w-100">Login</button>
           </form>
+          <button
+          type="button"
+          className="btn btn-link"
+          onClick={() => setIsModalOpen(true)}
+          >
+            Forget Password?
+          </button>
+          <ForgetPasswordModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
       </div>
     </div>

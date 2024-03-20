@@ -3,7 +3,6 @@ const FolderModel = require('../../models/taskSchema');
 // Function to delete a task within a folder
 module.exports.deleteTaskById = async (req, res) => {
     const { folderId, taskId } = req.params;
-    console.log(folderId, 'folderId', taskId, 'taskId');
     try {
         const folder = await FolderModel.findOne({ _id: folderId });
 

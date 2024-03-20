@@ -11,7 +11,7 @@ module.exports.getFolders = async (req, res) => {
 
   try {
     const folders = await FolderModel.find({ owner: req.user.id}).lean();
-    res.json(folders);
+    res.status(200).json(folders);
   } catch (err) {
     res.status(500).json({ 'Message': `Error while retrieving folders: ${err.message}` });
   }

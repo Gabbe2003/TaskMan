@@ -4,6 +4,7 @@ import { FolderContext } from '../../utilities/folder/folderReducer';
 import { showCreateFolderModal, hideCreateFolderModal, updateNewFolderForm, addFolder, setSelectedFolder } from '../../utilities/folder/folderActions';
 import { useFolderUpdate } from '../../utilities/folder/folderUpdatecontext';
 import { ITask } from '../../../interface/data';
+import { toast } from 'react-toastify';
 
 const HandleCreateFolder = () => {
     const { state, dispatch } = useContext(FolderContext)!;
@@ -12,15 +13,7 @@ const HandleCreateFolder = () => {
       name: '',
       favorite: false,
       dueDate: '',
-      tasks: [{ 
-        id:'',
-        name: '',
-        subTask: '',
-        dueDate: '',
-        priority: 'low',
-        status: 'pending',
-        createdTask: new Date().toISOString() 
-      }],
+      tasks: [],
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,17 +37,20 @@ const HandleCreateFolder = () => {
         const response = await axios.post('http://localhost:8000/post', folderData, {
           withCredentials: true,
         });
-
+        
+        triggerUpdate(); 
         dispatch(addFolder(response.data));
         dispatch(setSelectedFolder(response.data));
         dispatch(hideCreateFolderModal());
         dispatch(updateNewFolderForm(initialFolderFormState)); 
-        triggerUpdate(); 
-      } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error:any) {
         console.error('Failed to create folder:', error);
+        dispatch(hideCreateFolderModal());
+        toast.error(error.response.data.Message)
       }
     };
-
+    
     const handleFormChange = (field: string, value: string | boolean) => {
       const [key, subKey] = field.split('.');
       
@@ -80,11 +76,10 @@ const HandleCreateFolder = () => {
       if (!newTasks[index]) {
         // Initialize a default task structure if it doesn't exist
         newTasks[index] = {
-          _id: '',
           name: '',
           subTask: '',
-          priority: 'low', // Assuming 'low' as default
-          status: 'pending', // Assuming 'pending' as default
+          priority: 'low', 
+          status: 'pending',
           dueDate: '',
           createdTask: new Date().toISOString()
         };
@@ -93,9 +88,9 @@ const HandleCreateFolder = () => {
       // Special handling for fields with specific types or constraints
       let updatedValue: unknown = value;
       if (field === 'priority') {
-        updatedValue = value as 'low' | 'medium' | 'high'; // Type assertion for priority
+        updatedValue = value as 'low' | 'medium' | 'high';
       } else if (field === 'status') {
-        updatedValue = value as 'pending' | 'in progress' | 'completed'; // Type assertion for status
+        updatedValue = value as 'pending' | 'in progress' | 'completed';
       } else if (field === 'dueDate' || field === 'createdTask') {
         // Assuming value is properly formatted for date fields; convert to string if necessary
         updatedValue = (value instanceof Date) ? value.toISOString() : value;
@@ -106,7 +101,6 @@ const HandleCreateFolder = () => {
       // Dispatch the updated task array to the state
       dispatch(updateNewFolderForm({ ...state.newFolderForm, tasks: newTasks }));
     };
-
     return (
       <>
         <button className="btn btn-primary" onClick={() => dispatch(showCreateFolderModal())}>
@@ -114,7 +108,7 @@ const HandleCreateFolder = () => {
         </button>
     
         <div className={`modal fade ${state.showCreateFolderModal ? 'show' : ''}`} style={{ display: state.showCreateFolderModal ? 'block' : 'none' }} tabIndex={-1}>
-          <div className="modal-dialog modal-lg"> {/* Adjusted for a potentially wider modal */}
+          <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">New Folder</h5>
