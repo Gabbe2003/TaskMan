@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import '../../style/passwordPage.css';
+import '../../style/passwordPage.scss';
 
 function ResetPasswordForm() {
     const [searchParams] = useSearchParams();

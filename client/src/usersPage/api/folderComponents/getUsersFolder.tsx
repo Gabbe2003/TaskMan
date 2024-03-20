@@ -8,7 +8,7 @@ import { handleDeleteTaskInFolder } from '../folderAndTaskDeleteComponent/delete
 import TaskForm from '../taskComponents/createTaskInFolder';
 import { useFolderUpdate } from '../../utilities/folder/folderUpdatecontext';
 import { TaskContext } from '../../utilities/tasks/taskReducer';
-import '../../../style/userDataDisplay.css';
+import '../../../style/userDataDisplay.scss';
 import { handleUpdateTaskInFolder } from '../folderAndTaskDeleteComponent/update/taskUpdate';
 import { handleUpdateFolder } from '../folderAndTaskDeleteComponent/update/folderUpdate';
 import { toast } from 'react-toastify';
@@ -31,7 +31,6 @@ const UserDataDisplay: React.FC = () => {
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [currentFolderId, setCurrentFolderId] = useState<string>('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const { triggerUpdate, updateSignal } = useFolderUpdate();
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [selectedFolder, setSelectedFolder] = useState<IUserData | null>(null);
@@ -57,13 +56,11 @@ const UserDataDisplay: React.FC = () => {
           setUserData(response.data);
         } else {
           console.error('No data received');
-          setError('No data received');
         }
         setLoading(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error:any) {
-        console.error('Failed to fetch user data:', error);
-        setError('Failed to fetch user data');
+        toast.error('Failed to fetch user data:');
         setLoading(false);
       }
     };
@@ -86,6 +83,7 @@ const UserDataDisplay: React.FC = () => {
     setIsAddingTask(addingTask);
     setModalShow(true);
   };
+
   const closeModal = () => {
     resetForm();
     setSelectedFolder(null);
@@ -181,11 +179,9 @@ const UserDataDisplay: React.FC = () => {
   };
   
   if (loading) return <div>Loading user data...</div>;
-  if (error) return <div>{error}</div>;
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">User Data</h2>
       <div className="row g-4">
         {userData.map(({ _id, name, favorite, tasks, dueDate }) => (
           <div key={_id} className="col-sm-6 col-md-3">

@@ -6,7 +6,6 @@ import UserDataDisplay from './api/folderComponents/getUsersFolder';
 import HandleCreateFolder from './api/folderComponents/createFolder';
 import { toast } from 'react-toastify';
 import { handleDeleteUser } from './settings/userSettingsCalls/API_components/deleteUserComponent';
-import '../style/mainPage.scss';
 import { handleUpdateUser } from './settings/userSettingsCalls/API_components/updateUserComponent';
 import { useFolderUpdate } from './utilities/folder/folderUpdatecontext';
 
@@ -20,15 +19,8 @@ const UserProfile: React.FC = () => {
   const { logout, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [modalShow, setModalShow] = useState<boolean>(false);
-  const [updateModalShow, setUpdateModalShow] = useState<boolean>(false);
   const [updateFormData, setUpdateFormData] = useState({ email: '', username: '' });
   const { triggerUpdate, updateSignal } = useFolderUpdate();
-  
-  const requestDeleteUser = () => {
-    setModalShow(true); 
-  };
-  
   
   const deleteUser = async () => {
     if (userData && userData._id) {
@@ -43,9 +35,7 @@ const UserProfile: React.FC = () => {
       } catch (error:any) {
         console.error(error);
         toast.error(error.response?.data?.message || 'An unexpected error occurred.');
-      } finally {
-        setModalShow(false); 
-      }
+      } 
     }
   };
 
@@ -86,7 +76,6 @@ const UserProfile: React.FC = () => {
       try {
         await handleUpdateUser(userData._id, updateFormData.username, updateFormData.email);
         triggerUpdate();
-        setUpdateModalShow(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error('Failed to update user data:', error);
@@ -94,13 +83,6 @@ const UserProfile: React.FC = () => {
       }
     } else {
       toast.error('Failed to update the data');
-    }
-  };
-  
-  const handleUpdateUserClick = () => {
-    if (userData) {
-      setUpdateFormData({ email: userData.email || '', username: userData.username || '' });
-      setUpdateModalShow(true);
     }
   };
 
@@ -119,10 +101,13 @@ const UserProfile: React.FC = () => {
                   Settings
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li className="d-flex justify-content-center align-items-center bg-info text-white rounded" style={{cursor: 'pointer'}} onClick={handleUpdateUserClick}>Change User Info</li>
+                  
+                  <li className="d-flex justify-content-center align-items-center bg-info text-white rounded" style={{cursor: 'pointer'}} data-bs-toggle="modal" data-bs-target="#updateModal">Update User</li>
                   <br></br>
-                  <li className="d-flex justify-content-center align-items-center bg-danger text-white rounded" style={{cursor: 'pointer'}} onClick={requestDeleteUser}>Delete User</li>
+                  
+                  <li className="d-flex justify-content-center align-items-center bg-danger text-white rounded" style={{cursor: 'pointer'}} data-bs-toggle="modal" data-bs-target="#deleteModal">Delete User</li>
                   <br></br>
+
                   <li className="d-flex justify-content-center align-items-center bg-warning text-white rounded" style={{cursor: 'pointer'}} onClick={handleLogout}>Logout</li>
                 </ul>
               </li>
@@ -130,17 +115,34 @@ const UserProfile: React.FC = () => {
           </div>
         </div>
       </nav>
-     
   
-      {/* Update User Info Modal */}
-      <div 
-        className={`modal fade ${updateModalShow ? 'show' : ''}`} id="updateUserModal" tabIndex={-1} aria-labelledby="updateUserModalLabel" aria-hidden={!updateModalShow} style={{ display: updateModalShow ? 'block' : 'none' }}>
+      <div className="modal fade" id="deleteModal" tabIndex={-1} aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="staticBackdrop">Update User Info</h5>
-              <button type="button" className="btn-close" onClick={() => setUpdateModalShow(false)} aria-label="Close"></button>
+              <h5 className="modal-title" id="deleteModalLabel">Delete User</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div className="modal-body">
+              Are you sure you want to delete this user? The data will be removed and you will not be able to retrieve it back.
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={deleteUser}>Delete User</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Update User Info Modal */}
+      <div className="modal fade" id="updateModal" tabIndex={-1} aria-labelledby="updateUserModal" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+            <h5 className="modal-title" id="updateUserModal">Update User</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
             <form onSubmit={handleSubmitUpdate}>
               <div className="modal-body">
                 <div className="mb-3">
@@ -153,6 +155,7 @@ const UserProfile: React.FC = () => {
                     onChange={(e) => setUpdateFormData({ ...updateFormData, email: e.target.value })}
                   />
                 </div>
+
                 <div className="mb-3">
                   <label htmlFor="updateUsername" className="form-label">Username:</label>
                   <input
@@ -165,30 +168,10 @@ const UserProfile: React.FC = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setUpdateModalShow(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Update</button>
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" className="btn btn-primary"  data-bs-dismiss="modal" onClick={handleSubmitUpdate}>Save changes</button>
               </div>
             </form>
-          </div>
-        </div>
-      </div>
-
-      {/* Delete User Confirmation Modal */}
-      <div 
-        className={`modal fade ${modalShow ? 'show' : ''}`} id="deleteConfirmationModal" tabIndex={-1} aria-labelledby="deleteConfirmationModalLabel" aria-hidden={!modalShow} style={{ display: modalShow ? 'block' : 'none' }}>
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
-              <button type="button" className="btn-close" onClick={() => setModalShow(false)} aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              Are you sure you want to delete this user? The data will be removed and you will not be able to retrieve it back.
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={() => setModalShow(false)}>Cancel</button>
-              <button type="button" className="btn btn-danger" onClick={deleteUser}>Delete User</button>
-            </div>
           </div>
         </div>
       </div>
@@ -201,29 +184,3 @@ const UserProfile: React.FC = () => {
 };
 
 export default UserProfile;
-
-// <!-- Button trigger modal -->
-// <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-//   Launch static backdrop modal
-// </button>
-
-// <!-- Modal -->
-// <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-//   <div class="modal-dialog">
-//     <div class="modal-content">
-//       <div class="modal-header">
-//         <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-//         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-//       </div>
-//       <div class="modal-body">
-//         ...
-//       </div>
-//       <div class="modal-footer">
-//         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-//         <button type="button" class="btn btn-primary">Understood</button>
-//       </div>
-//     </div>
-//   </div>
-// </div>
-
-//WORK WITH THEESE TO MAKE ALL THE MODALS WORK AS THE SHOULD

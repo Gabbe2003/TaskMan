@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const UPDATE_URL = 'http://localhost:8000/put/';
 
@@ -11,7 +12,6 @@ export const UpdateFolder = async (folderId: string, folderData: object) => {
     return response.data;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log("Error during the update call:", error.response || error.message);
-    throw error;
+    toast.error('Error while updating the data of the folder');
   }
 };

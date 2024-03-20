@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const DELETE_URL = 'http://localhost:8000/delete/';
 
@@ -11,7 +12,6 @@ export const deleteFolder = async (folderId: string) => {
     return response.data;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log("Error during the delete call:", error.response || error.message);
-    throw error;
+    toast.error('Error while deleting the folder');
   }
 };

@@ -15,8 +15,9 @@ import { FolderProvider } from './src/usersPage/utilities/folder/folderReducer';
 import { FolderUpdateProvider } from './src/usersPage/utilities/folder/folderUpdatecontext';
 import { TaskProvider } from './src/usersPage/utilities/tasks/taskReducer';
 import { ToastContainer } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css'; 
 import ResetPasswordForm from './src/usersPage/settings/resetPasswordForm';
+import 'react-toastify/dist/ReactToastify.css'; 
+import './src/style/mainPage.scss';
 
 const App: React.FC = () => {
   const { user, setUser, verifySession } = useContext(AuthContext);
