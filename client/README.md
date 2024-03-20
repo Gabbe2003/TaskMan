@@ -1,30 +1,25 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project was built using Node.js, Express.js, MongoDB, Nodemailer, JWT, TypeScript, React, Bootstrap, Sass.
 
-Currently, two official plugins are available:
+Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+JWT Authentication
+Users are authenticated using JSON Web Tokens (JWT). 
+Each User get's their unique content based on the profile they are signed in on.
+Multiple users can be signed in at the same time
 
-## Expanding the ESLint configuration
+User Profile Management
+User can create, update and even delete the account. 
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+TypeScript
+All the code on the frontend is done by TypeScript to ensure type safety.
 
-- Configure the top-level `parserOptions` property like this:
+Folder Mangement
+User can create, update and delete a folder, user can also create a task inside of the folder.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+Security
+All User has to be authenticated before the access any route which add an extra layr of security.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+Features to be added in the future: Admin Page where the admin can view, update and delete all the users, Socket Io to open a chatt room so that all the users can have a conversation with each other and also be able to crud the messages. More styling and animations will be added in the future as I become better.
